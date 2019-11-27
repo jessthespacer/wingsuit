@@ -1,8 +1,9 @@
 % --- Vector components ---
 % Y     = [alph1; omeg1; x; y; xdot; ydot]
-% Ydot  = [alph1dot; omeg1dot; xdot; ydot; xddot; yddot]]
+% Ydot  = [alph1dot; omeg1dot; xdot; ydot; xddot; yddot]
 
 function Ydot = rates(Y, theta, verbose)
+    Ydot = zeros(6, 1);
 	alph1 = Y(1);
 	alph2 = alph1 - theta;
 	omeg1 = Y(2);
@@ -10,14 +11,28 @@ function Ydot = rates(Y, theta, verbose)
 	xdot = vel(1);
 	ydot = vel(2);
 	uinfty = norm(vel);
+    
+    % Check stall condition
+    if abs(alph1 * 180/pi) > 40
+        disp('AIRFOIL 1 STALL');
+        return
+    end
+    if abs(alph2 * 180/pi) > 40
+        disp('AIRFOIL 2 STALL');
+        return
+    end
 	
 	ie = evalin('base', 'ie');
 	je = evalin('base', 'je');
 
 	if (vel == [0; 0; 0])
 		zet = 0;
-	else
-		zet = acos(dot(vel / norm(vel), [ie; 0]));
+    else
+        % Note to self: Don't use the dot product
+        % to calculate angles between vectors
+        % don't think you're THAT smart
+		% zet = acos(dot(vel / norm(vel), [ie; 0]));
+        zet = atan2(ydot, xdot);
 	end
 
 	ie_prime = ie * cos(zet) + je * sin(zet);
@@ -71,7 +86,7 @@ function Ydot = rates(Y, theta, verbose)
 	lat_accel = (L1 + L2) / m + (D1 + D2) / m + g;
 	Ydot(5) = lat_accel(1);
 	Ydot(6) = lat_accel(2);
-
+    
 	if verbose
 		vel
 		uinfty

@@ -13,17 +13,20 @@ load('wingsuit_params.mat');
 % Ydot  = [alph1dot; omeg1dot; xdot; ydot; xddot; yddot]]
 
 % --- Initial conditions ---
-alph1_0 = 10 * pi/180;			% Initial angle of attack
+alph1_0 = 0 * pi/180;			% Initial angle of attack
 omeg1_0 = 0;					% Initial angular velocity
 x_0     = 0;					% Initial x (please always set to zero)
 y_0     = 0;					% Initial y (please always set to zero)
-xdot_0  = 70;					% Initial x velocity
+xdot_0  = 50;					% Initial x velocity
 ydot_0  = 0;					% Initial y velocity
 
-Y0 = [0, 0, 0, 0, 70, 0];
+Y0 = [alph1_0, omeg1_0, x_0, y_0, xdot_0, ydot_0];
 
 % --- Simulation parameters ---
-t_f = 1;						% Simulation length
+t_f = 5;						% Simulation length
+
+% --- Control algorithm ---
+theta_command = @(y) 0;
 
 % --- Solve system ---
 % Usage of rates(Y, theta, verbose):
@@ -31,7 +34,7 @@ t_f = 1;						% Simulation length
 %	theta:		Elevator angle at current timestep
 %	verbose:	Print out diagnostic information
 
-[t, Y] = ode45(@(t, y) rates(y, 0, false), [0 t_f], Y0);
+[t, Y] = ode45(@(t, y) rates(y, -1 * pi/180, false), [0 t_f], Y0);
 
 % --- Plot results ---
 figure(1);
