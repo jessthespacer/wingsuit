@@ -1,0 +1,77 @@
+# Created by Octave 4.4.1, Wed Nov 27 20:06:06 2019 GMT <unknown@DESKTOP-L4SMTKK>
+# name: A1
+# type: scalar
+1.1299999999999999
+
+
+# name: A2
+# type: scalar
+0.46999999999999997
+
+
+# name: CD1
+# type: function handle
+@<anonymous>
+@(alph) CD1f (alph)
+
+
+# name: CD2
+# type: function handle
+@<anonymous>
+@(alph) CD2f (alph)
+
+
+# name: CL1
+# type: function handle
+@<anonymous>
+@(alph) CL1f (alph)
+
+
+# name: CL2
+# type: function handle
+@<anonymous>
+@(alph) CL2f (alph)
+
+
+# name: CM1
+# type: function handle
+@<anonymous>
+@(alph) CM1f (alph)
+
+
+# name: CM2
+# type: function handle
+@<anonymous>
+@(alph) CM2f (alph)
+
+
+# name: Izz
+# type: scalar
+12.8803
+
+
+# name: c1
+# type: scalar
+1.2
+
+
+# name: c2
+# type: scalar
+0.90000000000000002
+
+
+# name: g
+# type: scalar
+9.8100000000000005
+
+
+# name: m
+# type: scalar
+70
+
+
+# name: rho
+# type: scalar
+1.2
+
+
