@@ -2,7 +2,7 @@
 % Y     = [alph; alphdot; x; y; xdot; ydot]
 % Ydot  = [alphdot; alphddot; xdot; ydot; xddot; yddot]
 
-function Ydot = rates(Y, theta, verbose)
+function Ydot = rates(t, Y, theta, verbose)
     % Load model constants
     m = evalin('base', 'm');
     Izz = evalin('base', 'Izz');
@@ -32,6 +32,15 @@ function Ydot = rates(Y, theta, verbose)
 	Dd = drag(2, uinfty, beta_eff);
 	Mc = mom(1, uinfty, alph_eff);
 	Md = mom(2, uinfty, beta_eff);
+    
+    % Get L/D ratio
+    L = Lc + Ld;
+    D = Dc + Dc;
+    LDR = L/D;
+    v = [t, LDR];
+    fid = fopen('LDRplot.csv', 'at');
+    fprintf(fid, '%.12d, %.12d\n', v);
+    fclose(fid);
 
 	% Sums of forces and moments
 	Lcy = Lc * cos(zet) + Dc * sin(zet);

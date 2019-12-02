@@ -7,6 +7,8 @@ close all; clear all;
 
 % --- Load parameters ---
 load('wingsuit_params.mat');
+f = fopen('LDRplot.csv', 'w');
+fclose(f);
 
 % --- Vector components ---
 % Y     = [alph; alphdot; x; y; xdot; ydot]
@@ -26,39 +28,46 @@ Y0 = [alph_0, alphdot_0, x_0, y_0, xdot_0, ydot_0];
 t_f = 5;						% Simulation length
 
 % --- Control algorithm ---
-theta_command = @(y) -1 * pi/180;
+theta = 0;
+theta_command = @(y) theta * pi/180;
 
 % --- Solve system ---
 % Usage of rates(Y, theta, verbose):
 %	Y:			State vector Y at current timestep
 %	theta:		Elevator angle at current timestep
 %	verbose:	Print out diagnostic information
-[t, Y] = ode45(@(t, y) rates(y, theta_command(y), false), [0 t_f], Y0);
+[t, Y] = ode45(@(t, y) rates(t, y, theta_command(y), false), [0 t_f], Y0);
 
 % --- Plot results ---
 figure(1);
+subplot(2, 2, 1);
 plot(Y(:, 3), Y(:, 4));
 title('Flightpath');
 xlabel('x [m]');
 ylabel('y [m]');
 grid on;
 
-figure(2);
+% figure(2);
+subplot(2, 2, 2);
 V = sqrt(Y(:, 5).^2 + Y(:, 6).^2);
 plot(t, V);
 title('Freestream velocity');
 xlabel('Time [s]');
 ylabel('Velocity [m/s]');
+xlim([0 t_f]);
 grid on;
 
-figure(3);
+% figure(3);
+subplot(2, 2, 3);
 plot(t, Y(:, 1) * 180 / pi);
 title('Angle of attack');
 xlabel('Time [s]');
 ylabel('Angle of attack [degrees]');
+xlim([0 t_f]);
 grid on;
 
-figure(4);
+% figure(4);
+subplot(2, 2, 4);
 plot(t, Y(:, 5));
 hold on;
 plot(t, Y(:, 6));
@@ -66,4 +75,19 @@ title('Velocity components');
 xlabel('Time [s]');
 ylabel('Velocity [m/s]');
 legend('x-velocity', 'y-velocity');
+xlim([0 t_f]);
+grid on;
+
+sgtitle({'Wingsuit simulation', ...
+    ['alph_0 = ', num2str(alph_0), ' deg, xdot_0 = ', num2str(xdot_0), ...
+    ' m/s, theta = ', num2str(theta), ' deg'], ...
+});
+
+figure(2);
+T = readtable('LDRplot.csv');
+plot(T.Var1, T.Var2);
+title('Lift/Drag ratio');
+xlabel('Time [s]');
+ylabel('LDR');
+xlim([0 t_f]);
 grid on;
